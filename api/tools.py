@@ -43,6 +43,12 @@ def get_sitemap_urls(url):
     return url_list
 
 
+def get_urls_from_file(file_name):
+    '''从给定的文件获取链接
+    '''
+    with open(file_name, 'r') as file:
+        return [x.strip() for x in file.readlines()]
+
 def generate_https(https):
     '''由于Https无法序列化，自己将其改为字典（已弃用）
     '''
