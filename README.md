@@ -8,7 +8,7 @@
 * 把利用[acme.sh](https://github.com/acmesh-official/acme.sh)申请的`Let's Encrypt`证书上传到腾讯云
 * 由于多次申请`TrustAsia`的一年期免费单域名证书失败，所以准备使用`Let's Encrypt`证书
 * 该程序已将每一个步骤都实现：自动上传SSL并替换CDN的证书
-* 为了使网站访问更快，每天预热URL（可以单独抽出该函数，运行在腾讯云函数）
+* 为了使网站访问更快，每天预热URL（可以单独抽出该函数，运行在[腾讯云函数](https://github.com/zfb132/auto_push_url)）
 
 ## 使用acme.sh申请证书
 [安装及简单使用](https://blog.whuzfb.cn/blog/2020/07/07/web_https/#3-%E5%AE%89%E8%A3%85acme%E8%87%AA%E5%8A%A8%E7%AD%BE%E5%8F%91%E8%AF%81%E4%B9%A6)  
