@@ -35,6 +35,8 @@ acme.sh --issue  -d "whuzfb.cn" -d "*.whuzfb.cn" --dns dns_dp
 `cdn.get_cdn_detail_info(client)`：获取所有CDN的详细信息，返回列表  
 `cdn.get_cdn_url_push_info(client)`：查询CDN预热配额和每日可用量  
 `cdn.update_cdn_url_push(client, urls)`：指定 URL 资源列表加载至 CDN 节点，支持指定加速区域预热；默认情况下境内、境外每日预热 URL 限额为各 1000 条，每次最多可提交 20 条  
+`cdn.get_cdn_purge_url_info(client)`：查询CDN刷新配额和每日可用量  
+`cdn.update_cdn_purge_url(client, urls)`：指定 URL 资源的刷新，支持指定加速区域刷新；默认情况下境内、境外每日刷新 URL 限额为各 10000 条，每次最多可提交 1000 条  
 `cdn.update_cdn_ssl(client, domain, cert_id)`：为指定域名的CDN更换SSL证书  
 
 

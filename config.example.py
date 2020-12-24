@@ -29,6 +29,8 @@ UPDATE_SSL = True
 CERT_ID = ""
 # 是否进行预热URL的操作
 PUSH_URL = True
+# 是否进行刷新URL的操作
+PURGE_URL = True
 # 自定义的预热URL（默认会预热sitemap.xml的所有链接）文件路径
 # 该文件内，每行一个URL，例如
 # https://blog.whuzfb.cn/img/me2.jpg
