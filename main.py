@@ -5,7 +5,7 @@
 from api import cdn, ecdn, ssl, tools
 import config
 
-def run_config_ssl(id, key, domain, cer_file, key_file):
+def run_config_ssl(id, key, cer_file, key_file):
     '''上传SSl证书到腾讯云SSL证书管理，返回新证书的id
     '''
     cert_info = {
@@ -23,11 +23,11 @@ def run_config_ssl(id, key, domain, cer_file, key_file):
         # 获取每个证书的id
         cert_id = cert.CertificateId
         # 获取每个证书的信息
-        if domain == ssl.get_cert_info(ssl_client, cert_id).Domain:
-            # 删除证书
-            # delete_cert(client, cert_id)
-            # break
-            print(cert_id)
+        # if domain == ssl.get_cert_info(ssl_client, cert_id).Domain:
+        #     # 删除证书
+        #     # delete_cert(client, cert_id)
+        #     # break
+        #     print(cert_id)
     # 上传证书，获取新证书的id
     id = ssl.upload_cert(ssl_client, cert_info)
     if len(id)>0:
@@ -121,12 +121,13 @@ def run_purge_url(id, key, domain, urls_file):
 if __name__ == "__main__":
     SECRETID = config.SECRETID
     SECRETKEY = config.SECRETKEY
+    # 泛域名证书
+    if config.UPLOAD_SSL:
+        cert_id = run_config_ssl(SECRETID, SECRETKEY, config.CER_FILE, config.KEY_FILE)
+    else:
+        cert_id = config.CERT_ID
     for my_domain in config.CDN_DOMAIN:
         my_domain = config.CDN_DOMAIN
-        if config.UPLOAD_SSL:
-            cert_id = run_config_ssl(SECRETID, SECRETKEY, my_domain, config.CER_FILE, config.KEY_FILE)
-        else:
-            cert_id = config.CERT_ID
         if config.UPDATE_SSL:
             run_config_cdn(SECRETID, SECRETKEY, my_domain, cert_id)
         if config.PUSH_URL:
