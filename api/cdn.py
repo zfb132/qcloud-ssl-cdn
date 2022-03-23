@@ -147,21 +147,38 @@ def update_cdn_ssl(client, domain, cert_id):
         print(err)
         exit("为CDN设置SSL证书{}出错".format(cert_id))
 
-def update_cdn_http2(client, domain):
-    '''为指定域名的CDN的HTTPS开启HTTP 2.0
+def update_cdn_https_options(client, domain, http2, hsts, age, hsts_subdomain, ocsp):
+    '''为指定域名的CDN的HTTPS开启HTTP 2.0、HSTS、OCSP等多个可选项
     '''
     try:
         req = models.UpdateDomainConfigRequest()
         params = {
             "Domain": domain,
-            "Http2": "on"
+            "Https": {
+                "Switch": "on"
+            }
         }
+        if http2:
+            params["Https"]["Http2"] = "on"
+        if hsts:
+            params["Https"]["Hsts"] = {
+                "Switch": "off",
+                "MaxAge": 0,
+                "IncludeSubDomains": "off"
+            }
+            params["Https"]["Hsts"]["Switch"] = "on"
+            params["Https"]["Hsts"]["MaxAge"] = age
+            if hsts_subdomain:
+                params["Https"]["Hsts"]["IncludeSubDomains"] = "on"
+        if ocsp:
+            params["Https"]["OcspStapling"] = "on"
+
         req.from_json_string(json.dumps(params))
     
         resp = client.UpdateDomainConfig(req)
         print(resp.to_json_string())
-        print("成功开启域名为{0}的CDN的Http2选项".format(domain))
+        print("成功开启域名为{0}的CDN的HTTPS选项".format(domain))
     
     except TencentCloudSDKException as err:
         print(err)
-        exit("为{}的CDN开启HTTP 2.0功能出错".format(domain))
+        exit("为{}的CDN开启HTTPS选项功能出错".format(domain))
