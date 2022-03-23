@@ -121,17 +121,18 @@ def run_purge_url(id, key, domain, urls_file):
 if __name__ == "__main__":
     SECRETID = config.SECRETID
     SECRETKEY = config.SECRETKEY
-    my_domain = config.CDN_DOMAIN
-    if config.UPLOAD_SSL:
-        cert_id = run_config_ssl(SECRETID, SECRETKEY, my_domain, config.CER_FILE, config.KEY_FILE)
-    else:
-        cert_id = config.CERT_ID
-    if config.UPDATE_SSL:
-        run_config_cdn(SECRETID, SECRETKEY, my_domain, cert_id)
-    if config.PUSH_URL:
-        run_url_push(SECRETID, SECRETKEY, my_domain, config.URLS_FILE)
-    if config.PURGE_URL:
-        run_purge_url(SECRETID, SECRETKEY, my_domain, config.URLS_FILE)
-    # ecdn是全球加速服务，与CDN不同，本账号没有开通该功能
-    # run_config_ecdn(SECRETID, SECRETKEY, my_domain, cert_id)
+    for my_domain in config.CDN_DOMAIN:
+        my_domain = config.CDN_DOMAIN
+        if config.UPLOAD_SSL:
+            cert_id = run_config_ssl(SECRETID, SECRETKEY, my_domain, config.CER_FILE, config.KEY_FILE)
+        else:
+            cert_id = config.CERT_ID
+        if config.UPDATE_SSL:
+            run_config_cdn(SECRETID, SECRETKEY, my_domain, cert_id)
+        if config.PUSH_URL:
+            run_url_push(SECRETID, SECRETKEY, my_domain, config.URLS_FILE)
+        if config.PURGE_URL:
+            run_purge_url(SECRETID, SECRETKEY, my_domain, config.URLS_FILE)
+        # ecdn是全球加速服务，与CDN不同，本账号没有开通该功能
+        # run_config_ecdn(SECRETID, SECRETKEY, my_domain, cert_id)
 

@@ -14,7 +14,9 @@ CER_FILE = "/home/zfb/.acme.sh/whuzfb.cn/fullchain.cer"
 KEY_FILE = "/home/zfb/.acme.sh/whuzfb.cn/whuzfb.cn.key"
 
 # CDN服务配置的域名（需要提前在腾讯云网页前端创建）
-CDN_DOMAIN = "blog.whuzfb.cn"
+# 如果ACME申请的证书为泛域名证书，且要配置多个CDN加速
+# CDN_DOMAIN = ["blog.whuzfb.cn", "blog2.whuzfb.cn", "web.whuzfb.cn"]
+CDN_DOMAIN = ["blog.whuzfb.cn"]
 
 # 腾讯云：https://console.cloud.tencent.com/cam/capi
 SECRETID = "AKeee5555512345677777123456788889876"
