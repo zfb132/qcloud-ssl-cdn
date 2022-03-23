@@ -94,7 +94,7 @@ def get_cert_detail(client, cert_id):
 
 
 def delete_cert(client, cert_id):
-    '''删除指定id的SSL证书
+    '''删除指定id的SSL证书(删除不存在的id会出现警告)
     '''
     try:
         req = models.DeleteCertificateRequest()

@@ -51,6 +51,41 @@ def run_config_cdn(id, key, domain, cert_id):
     cdn.update_cdn_ssl(cdn_client, domain, cert_id)
 
 
+def delete_old_ssls(id, key, cdn_domain, ignore_id):
+    '''删除某个CDN的，除ignore_id以外的所有ssl证书
+    '''
+    ssl_client = ssl.get_ssl_client_instance(id, key)
+    cert_list = ssl.get_cert_list(ssl_client)
+    for cert in cert_list:
+        cert_id = cert.CertificateId
+        # 刚上传的这个证书不删除
+        if cert_id == ignore_id:
+            continue
+        cert_info = ssl.get_cert_info(ssl_client, cert_id)
+        cert_domain = cert_info.Domain
+        cert_subject_alt_name = cert_info.SubjectAltName
+        # 判断域名匹配
+        matched = False
+        if cert_domain == cdn_domain:
+            matched = True
+        else:
+            # 判断泛域名或多域名
+            for cert_sub_name in cert_subject_alt_name:
+                if cert_sub_name:
+                    if cert_sub_name == cdn_domain:
+                        matched = True
+                        break
+                    # 查看主域名是否匹配 m=['*','example.cn']
+                    m = cert_sub_name.split('.', 1)
+                    n = cdn_domain.split('.', 1)
+                    if m[0] == "*" and m[1] == n[1]:
+                        matched = True
+                        break
+        # 根据结果删除证书
+        if matched:
+            ssl.delete_cert(ssl_client, cert_id)
+
+
 def run_config_ecdn(id, key, domain, cert_id):
     '''全站加速网络：为指定域名的CDN更新SSL证书
     '''
@@ -129,6 +164,8 @@ if __name__ == "__main__":
     for my_domain in config.CDN_DOMAIN:
         if config.UPDATE_SSL:
             run_config_cdn(SECRETID, SECRETKEY, my_domain, cert_id)
+        if config.DELETE_OLD_CERTS:
+            delete_old_ssls(SECRETID, SECRETKEY, my_domain, cert_id)
         if config.PUSH_URL:
             run_url_push(SECRETID, SECRETKEY, my_domain, config.URLS_FILE)
         if config.PURGE_URL:
