@@ -127,7 +127,6 @@ if __name__ == "__main__":
     else:
         cert_id = config.CERT_ID
     for my_domain in config.CDN_DOMAIN:
-        my_domain = config.CDN_DOMAIN
         if config.UPDATE_SSL:
             run_config_cdn(SECRETID, SECRETKEY, my_domain, cert_id)
         if config.PUSH_URL:
