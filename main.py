@@ -67,25 +67,21 @@ def delete_old_ssls(id, key, cdn_domain, ignore_id):
         if cert_id == ignore_id:
             continue
         cert_info = ssl.get_cert_info(ssl_client, cert_id)
-        cert_domain = cert_info.Domain
-        cert_subject_alt_name = cert_info.SubjectAltName
-        # 判断域名匹配
+        cert_domain_and_alt_name = [cert_info.Domain] + cert_info.SubjectAltName
         matched = False
-        if cert_domain == cdn_domain:
-            matched = True
-        else:
-            # 判断泛域名或多域名
-            for cert_sub_name in cert_subject_alt_name:
-                if cert_sub_name:
-                    if cert_sub_name == cdn_domain:
-                        matched = True
-                        break
-                    # 查看主域名是否匹配 m=['*','example.cn']
-                    m = cert_sub_name.split('.', 1)
-                    n = cdn_domain.split('.', 1)
-                    if m[0] == "*" and m[1] == n[1]:
-                        matched = True
-                        break
+        # 判断域名匹配
+        for cert_name in cert_domain_and_alt_name:
+            if cert_name:
+                # 判断主域名或多域名
+                if cert_name == cdn_domain:
+                    matched = True
+                    break
+                # 判断泛域名 m=['*','example.cn']
+                m = cert_name.split('.', 1)
+                n = cdn_domain.split('.', 1)
+                if m[0] == "*" and m[1] == n[1]:
+                    matched = True
+                    break
         # 根据结果删除证书
         if matched:
             ssl.delete_cert(ssl_client, cert_id)
