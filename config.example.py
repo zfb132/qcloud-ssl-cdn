@@ -25,6 +25,17 @@ SECRETKEY = "A71234567890abcdefedcba098765432"
 # 控制功能开关
 # 是否进行上传证书文件的操作（根据CER_FILE和KEY_FILE）
 UPLOAD_SSL = True
+# 以下为HTTPS额外功能
+# 是否开启HTTP2
+ENABLE_HTTP2 = True
+# 是否开启HSTS
+ENABLE_HSTS = True
+# 为HSTS设定最长过期时间（以秒为单位）
+HSTS_TIMEOUT_AGE = 1
+# HSTS包含子域名（仅对泛域名有效）
+HSTS_INCLUDE_SUBDOMAIN = True
+# 是否开启OCSP
+ENABLE_OCSP = True
 # 是否删除适用于CDN_DOMAIN域名下的其他所有证书
 # 满足以下条件：证书适用于CDN_DOMAIN、证书id不是本次使用的id
 DELETE_OLD_CERTS = True

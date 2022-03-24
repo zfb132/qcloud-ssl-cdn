@@ -50,6 +50,11 @@ def run_config_cdn(id, key, domain, cert_id):
     # generate_https(https)
     cdn.update_cdn_ssl(cdn_client, domain, cert_id)
 
+def https_options_enabler(id, key, domain, http2, hsts, age, hsts_subdomain, ocsp):
+    '''开启HTTPS配置中的部分选项
+    '''
+    cdn_client = cdn.get_cdn_client_instance(id, key)
+    cdn.update_cdn_https_options(cdn_client, domain, http2, hsts, age, hsts_subdomain, ocsp)
 
 def delete_old_ssls(id, key, cdn_domain, ignore_id):
     '''删除某个CDN的，除ignore_id以外的所有ssl证书
@@ -164,6 +169,9 @@ if __name__ == "__main__":
     for my_domain in config.CDN_DOMAIN:
         if config.UPDATE_SSL:
             run_config_cdn(SECRETID, SECRETKEY, my_domain, cert_id)
+        if config.ENABLE_HSTS or config.ENABLE_OCSP or config.ENABLE_HTTP2:
+            https_options_enabler(SECRETID, SECRETKEY, my_domain, config.ENABLE_HTTP2, config.ENABLE_HSTS,
+                                  config.HSTS_TIMEOUT_AGE, config.HSTS_INCLUDE_SUBDOMAIN, config.ENABLE_OCSP)
         if config.DELETE_OLD_CERTS:
             delete_old_ssls(SECRETID, SECRETKEY, my_domain, cert_id)
         if config.PUSH_URL:
