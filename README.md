@@ -10,7 +10,43 @@
 * 该程序已将每一个步骤都实现：自动上传SSL并替换CDN的证书
 * 为了使网站访问更快，每天预热URL（可以单独抽出该函数，运行在[腾讯云函数](https://github.com/zfb132/auto_push_url)）
 
-## 使用acme.sh申请证书
+
+## 部署方式
+
+### 使用 Docker 快速部署
+
+每月 1 号凌晨 2 点定时执行证书更新
+
+* `ACME_DNS_TYPE`: Acme 的 dns 类型，你可以选择你的 dns 类型并配置[环境变量密钥](https://github.com/acmesh-official/acme.sh/wiki/dnsapi)
+* `ACME_DOMAIN`: 你的顶级域名，例如：monlor.com，自动申请证书 monlor.com/*.monlor.com
+* `SECRETID`: 腾讯云 Secret Id
+* `SECRETKEY`: 腾讯云 Secret Key
+* `CDN_DOMAIN`: CDN 域名，多个域名用逗号分隔
+* `RUN_NOW`: 是否在 Docker 启动时执行程序
+
+```bash
+docker run -d \
+  --name qcloud-ssl-cdn \
+  --restart=unless-stopped \ 
+  -e DP_Id=xxx \
+  -e DP_Key=xxx \ 
+  -e ACME_DNS_TYPE=dns_dp \ 
+  -e ACME_DOMAIN=monlor.com \
+  -e SECRETID=xxx \
+  -e SECRETKEY=xxx \
+  -e CDN_DOMAIN=www.monlor.com \
+  -e RUN_NOW=true \
+  ghcr.io/monlor/qcloud-ssl-cdn:main
+```
+
+其他变量
+
+* `ACME_ENABLED`: 是否启用 acme，不启用将证书映射到容器`/data/certs`目录
+* `PUSH_URLS`: CDN 刷新/预热地址，逗号分隔
+
+### 手动部署
+
+#### 使用acme.sh申请证书
 [安装及简单使用](https://blog.whuzfb.cn/blog/2020/07/07/web_https/#3-%E5%AE%89%E8%A3%85acme%E8%87%AA%E5%8A%A8%E7%AD%BE%E5%8F%91%E8%AF%81%E4%B9%A6)  
 对于本程序  
 ```bash
@@ -20,7 +56,7 @@ acme.sh --issue  -d "whuzfb.cn" -d "*.whuzfb.cn" --dns dns_dp
 # acme.sh --issue  -d "blog.whuzfb.cn" --dns dns_dp
 ```
 
-## 修改config.example.py参数
+#### 修改config.example.py参数
 根据注释修改每一项内容  
 然后重命名为`config.py`
 
