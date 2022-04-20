@@ -9,6 +9,9 @@ fi
 
 # 添加刷新url
 echo "${PUSH_URLS:-}" | tr ',' '\n' > ${WORK_DIR}/urls.txt
+if [ -n "${PUSH_URLS_PATH:-}" ]; then
+  cat "${PUSH_URLS_PATH}" >> ${WORK_DIR}/urls.txt
+fi
 
 # 写入腾讯云cdn更新配置
 cat>${WORK_DIR}/config.py<<-EOF

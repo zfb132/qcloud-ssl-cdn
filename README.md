@@ -39,11 +39,11 @@ docker run -d \
   ghcr.io/monlor/qcloud-ssl-cdn:main
 ```
 
-其他变量
+#### 其他变量
 
 * `ACME_ENABLED`: 是否启用 acme，不启用将证书映射到容器`/data/certs`目录
 * `PUSH_URLS`: CDN 刷新/预热地址，逗号分隔
-
+* `PUSH_URLS_PATH`: CDN 刷新/预热地址文件路径，文件映射到 Docker 容器，**路径不能是`/data/urls.txt`**
 
 ### 使用 GitHub Action 部署
 
