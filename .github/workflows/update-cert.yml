@@ -1,0 +1,45 @@
+name: Update Cert
+
+on:
+  schedule:
+    - cron: '0 10 1 * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 
+        uses: actions/checkout@v3
+
+      - name: Prepare Environment
+        run: |
+          curl https://get.acme.sh | sh -s email=my@example.com
+          pip install -r requirements.txt
+
+      - name: Update Cert
+        env:
+          DP_Id: ${{ secrets.DP_Id }}
+          DP_Key: ${{ secrets.DP_Key }}
+          ACME_DNS_TYPE: ${{ secrets.ACME_DNS_TYPE }}
+          ACME_DOMAIN: ${{ secrets.ACME_DOMAIN }}
+          SECRETID: ${{ secrets.SECRETID }}
+          SECRETKEY: ${{ secrets.SECRETKEY }}
+          CDN_DOMAIN: ${{ secrets.CDN_DOMAIN }}
+          CERT_HOME: /home/runner/.acme.sh
+          ACME_HOME: /home/runner/.acme.sh
+          WORK_DIR: .
+        run: sh ./docker/update.sh
+
+      - name: Notification
+        uses: monlor/bark-action@v3
+        if: always()
+        with:
+          host: ${{ secrets.BARK_HOST}} # not required
+          key: ${{ secrets.BARK_KEY }}   # Your secret key
+          title: Github Actions
+          body: 'Your tencent cdn certs update ${{ job.status }}！'
+          isArchive: 1
+          url: 'github://github.com/${{ github.repository }}'
+          group: Github
+          icon: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
+          copy: ${{ steps.meta.outputs.tags }}

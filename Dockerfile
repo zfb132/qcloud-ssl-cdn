@@ -5,6 +5,8 @@ LABEL AUTHOR="monlor"
 ENV LANG="C.UTF-8" 
 ENV TZ="Asia/Shanghai" 
 ENV CERT_HOME="/data/certs"
+ENV WORK_DIR="/data"
+ENV ACME_HOME="/root/.acme.sh"
 
 WORKDIR /data
 

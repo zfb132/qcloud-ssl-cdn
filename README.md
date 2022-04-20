@@ -44,6 +44,19 @@ docker run -d \
 * `ACME_ENABLED`: 是否启用 acme，不启用将证书映射到容器`/data/certs`目录
 * `PUSH_URLS`: CDN 刷新/预热地址，逗号分隔
 
+
+### 使用 GitHub Action 部署
+
+Fork 此项目，配置以下 Github Action Secrets
+
+* `ACME_DNS_TYPE`: Acme 的 dns 类型，你可以选择你的 dns 类型并配置[环境变量密钥](https://github.com/acmesh-official/acme.sh/wiki/dnsapi)
+* `ACME_DOMAIN`: 你的顶级域名，例如：monlor.com，自动申请证书 monlor.com/*.monlor.com
+* `SECRETID`: 腾讯云 Secret Id
+* `SECRETKEY`: 腾讯云 Secret Key
+* `CDN_DOMAIN`: CDN 域名，多个域名用逗号分隔
+* `BARK_HOST`: [Bark](https://github.com/Finb/Bark) 消息通知 Host
+* `BARK_KEY`: [Bark](https://github.com/Finb/Bark) 消息通知 Key
+
 ### 手动部署
 
 #### 使用acme.sh申请证书
