@@ -101,16 +101,21 @@ def run_url_push(id, key, domain, urls_file):
     '''
     from time import sleep
     from os.path import isfile
-    urls = tools.get_sitemap_urls("https://{}/sitemap.xml".format(domain))
+    urls = []
+    try:
+        urls = tools.get_sitemap_urls("https://{}/sitemap.xml".format(domain))
+    except Exception as e:
+        print(repr(e))
     if isfile(urls_file):
         urls = urls + tools.get_urls_from_file(urls_file)
     cdn_client = cdn.get_cdn_client_instance(id, key)
+    cdn_region = cdn.get_cdn_basic_info(cdn_client, domain)[0].Area
     info = cdn.get_cdn_url_push_info(cdn_client)
     # 统计预热url数量
     cnt = 0
-    # 只对国内进行预热
+    # 根据加速域名配置的区域进行预热
     for i in info:
-        if i.Area == "mainland":
+        if i.Area == cdn_region:
             grp_size = i.Batch
             available = i.Available
             print("正在对区域{0}进行url预热，剩余配额{1}条".format(i.Area, available))
@@ -130,16 +135,21 @@ def run_purge_url(id, key, domain, urls_file):
     '''
     from time import sleep
     from os.path import isfile
-    urls = tools.get_sitemap_urls("https://{}/sitemap.xml".format(domain))
+    urls = []
+    try:
+        urls = tools.get_sitemap_urls("https://{}/sitemap.xml".format(domain))
+    except Exception as e:
+        print(repr(e))
     if isfile(urls_file):
         urls = urls + tools.get_urls_from_file(urls_file)
     cdn_client = cdn.get_cdn_client_instance(id, key)
+    cdn_region = cdn.get_cdn_basic_info(cdn_client, domain)[0].Area
     info = cdn.get_cdn_purge_url_info(cdn_client)
     # 统计刷新url数量
     cnt = 0
-    # 只对国内进行刷新
+    # 根据加速域名配置的区域进行刷新
     for i in info:
-        if i.Area == "mainland":
+        if i.Area == cdn_region:
             grp_size = i.Batch
             available = i.Available
             print("正在对区域{0}进行url刷新，剩余配额{1}条".format(i.Area, available))

@@ -42,6 +42,32 @@ def get_cdn_detail_info(client):
         print(err)
         return []
 
+def get_cdn_basic_info(client, domain_name):
+    '''获取指定CDN的基本信息
+    '''
+    try:
+        req = models.DescribeDomainsRequest()
+        params = {
+            "Limit": 1,
+            "Filters": [
+                {
+                    "Name": "domain",
+                    "Value": [ domain_name ],
+                    "Fuzzy": False
+                }
+            ]
+        }
+        req.from_json_string(json.dumps(params))
+    
+        resp = client.DescribeDomains(req)
+        # print(resp.to_json_string())
+        print("获取指定cdn基本信息成功")
+        return resp.Domains
+
+    except TencentCloudSDKException as err:
+        print(err)
+        return []
+
 def get_cdn_url_push_info(client):
     '''查询CDN预热配额和每日可用量
     '''
