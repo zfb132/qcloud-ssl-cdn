@@ -122,14 +122,15 @@ def get_cdn_purge_url_info(client):
         return []
 
 
-def update_cdn_purge_url(client, urls):
+def update_cdn_purge_url(client, urls, region):
     '''指定 URL 资源的刷新，支持指定加速区域刷新
     默认情况下境内、境外每日刷新 URL 限额为各 10000 条，每次最多可提交 1000 条
     '''
     try:
         req = models.PurgeUrlsCacheRequest()
         params = {
-            "Urls": urls
+            "Urls": urls,
+            "Area": region
         }
         req.from_json_string(json.dumps(params))
         resp = client.PurgeUrlsCache(req)
