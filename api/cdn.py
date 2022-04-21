@@ -85,14 +85,15 @@ def get_cdn_url_push_info(client):
         return []
 
 
-def update_cdn_url_push(client, urls):
+def update_cdn_url_push(client, urls, region):
     '''指定 URL 资源列表加载至 CDN 节点，支持指定加速区域预热
     默认情况下境内、境外每日预热 URL 限额为各 1000 条，每次最多可提交 20 条
     '''
     try:
         req = models.PushUrlsCacheRequest()
         params = {
-            "Urls": urls
+            "Urls": urls,
+            "Area": region,
         }
         req.from_json_string(json.dumps(params))
         resp = client.PushUrlsCache(req)
@@ -130,7 +131,8 @@ def update_cdn_purge_url(client, urls, region):
         req = models.PurgeUrlsCacheRequest()
         params = {
             "Urls": urls,
-            "Area": region
+            "Area": region,
+            "UrlEncode": True
         }
         req.from_json_string(json.dumps(params))
         resp = client.PurgeUrlsCache(req)

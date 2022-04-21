@@ -110,18 +110,23 @@ def run_url_push(id, key, domain, urls_file):
         urls = urls + tools.get_urls_from_file(urls_file)
     cdn_client = cdn.get_cdn_client_instance(id, key)
     cdn_region = cdn.get_cdn_basic_info(cdn_client, domain)[0].Area
+    # 预热URL支持area为global的参数，但是为了方便统计用量配额，手动分开刷新
+    if cdn_region == 'global':
+        cdn_region = ['mainland', 'overseas']
+    else:
+        cdn_region = [cdn_region]
     info = cdn.get_cdn_url_push_info(cdn_client)
     # 统计预热url数量
     cnt = 0
     # 根据加速域名配置的区域进行预热
     for i in info:
-        if i.Area == cdn_region:
+        if i.Area in cdn_region:
             grp_size = i.Batch
             available = i.Available
             print("正在对区域{0}进行url预热，剩余配额{1}条".format(i.Area, available))
             new_urls = tools.resize_url_list(urls, grp_size)
             for url_grp in new_urls:
-                res = cdn.update_cdn_url_push(cdn_client, url_grp)
+                res = cdn.update_cdn_url_push(cdn_client, url_grp, i.Area)
                 if res:
                     cnt = cnt + len(url_grp)
                     sleep(0.1)
