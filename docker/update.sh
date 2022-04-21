@@ -48,7 +48,7 @@ ENABLE_HTTP2 = True
 # 是否开启HSTS
 ENABLE_HSTS = True
 # 为HSTS设定最长过期时间（以秒为单位）
-HSTS_TIMEOUT_AGE = 1
+HSTS_TIMEOUT_AGE = 31536000
 # HSTS包含子域名（仅对泛域名有效）
 HSTS_INCLUDE_SUBDOMAIN = True
 # 是否开启OCSP
