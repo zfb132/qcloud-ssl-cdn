@@ -15,7 +15,7 @@ def run_config_ssl(id, key, cer_file, key_file):
         # fullchain.cer
         "cer": tools.read_file(cer_file),
         "key": tools.read_file(key_file),
-        "type": "CA"
+        "type": "SVR"
     }
     ssl_client = ssl.get_ssl_client_instance(id, key)
     cert_list = ssl.get_cert_list(ssl_client)
