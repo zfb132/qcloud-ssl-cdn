@@ -4,7 +4,12 @@ set -u
 
 if [ "${ACME_ENABLED:=true}" = "true" ]; then
   # 使用acme获取/更新证书
-  ${ACME_HOME}/acme.sh ${ACME_PARAMS:-} --force --issue --cert-home ${CERT_HOME} -d ${ACME_DOMAIN} -d *.${ACME_DOMAIN} --dns dns_dp 
+  ${ACME_HOME}/acme.sh ${ACME_PARAMS:-} --force --issue --cert-home ${CERT_HOME} -d ${ACME_DOMAIN} -d *.${ACME_DOMAIN} --dns ${ACME_DNS_TYPE}
+  # 兼容ecc证书
+  if [ -d "${CERT_HOME}/${ACME_DOMAIN}_ecc" ]; then
+    cp -r ${CERT_HOME}/${ACME_DOMAIN}_ecc ${CERT_HOME}/${ACME_DOMAIN}
+    echo "The ECC certificate is detected"
+  fi
 fi
 
 # 添加刷新url
