@@ -183,6 +183,36 @@ def run_config_teo(id, key, zoneid, host, cert_id):
     # generate_https(https)
     teo.update_teo_ssl(teo_client, zoneid, host, cert_id)
 
+def process_domain_config(secret_id, secret_key, domain, cert_id):
+    '''
+    配置域名的CDN、EO、SSL、URL刷新等功能
+    '''
+    if config.UPDATE_SSL:
+        run_config_cdn(secret_id, secret_key, domain, cert_id)
+    if config.ENABLE_HSTS or config.ENABLE_OCSP or config.ENABLE_HTTP2:
+        https_options_enabler(secret_id, secret_key, domain, config.ENABLE_HTTP2, config.ENABLE_HSTS,
+                              config.HSTS_TIMEOUT_AGE, config.HSTS_INCLUDE_SUBDOMAIN, config.ENABLE_OCSP)
+    if config.DELETE_OLD_CERTS:
+        delete_old_ssls(secret_id, secret_key, domain, cert_id)
+    if config.PUSH_URL:
+        run_url_push(secret_id, secret_key, domain, config.URLS_FILE)
+    if config.PURGE_URL:
+        run_purge_url(secret_id, secret_key, domain, config.URLS_FILE)
+    if config.ZONE_ID:
+        run_config_teo(secret_id, secret_key, config.ZONE_ID, domain, cert_id)
+
+def get_cdn_domains(secret_id, secret_key, cert_id):
+    '''
+    获取证书id适用的域名列表
+    '''
+    cdn_client = cdn.get_cdn_client_instance(secret_id, secret_key)
+    domain_list = cdn.describe_cert_domains(cdn_client, cert_id)
+
+    print("证书id适用的域名列表：")
+    for domain in domain_list:
+        print(domain)
+
+    return domain_list
 
 if __name__ == "__main__":
     SECRETID = config.SECRETID
@@ -193,21 +223,9 @@ if __name__ == "__main__":
     else:
         cert_id = config.CERT_ID
     for my_domain in config.CDN_DOMAIN:
-
-        if config.UPDATE_SSL:
-            run_config_cdn(SECRETID, SECRETKEY, my_domain, cert_id)
-        if config.ENABLE_HSTS or config.ENABLE_OCSP or config.ENABLE_HTTP2:
-            https_options_enabler(SECRETID, SECRETKEY, my_domain, config.ENABLE_HTTP2, config.ENABLE_HSTS,
-                                  config.HSTS_TIMEOUT_AGE, config.HSTS_INCLUDE_SUBDOMAIN, config.ENABLE_OCSP)
-        if config.DELETE_OLD_CERTS:
-            delete_old_ssls(SECRETID, SECRETKEY, my_domain, cert_id)
-        if config.PUSH_URL:
-            run_url_push(SECRETID, SECRETKEY, my_domain, config.URLS_FILE)
-        if config.PURGE_URL:
-            run_purge_url(SECRETID, SECRETKEY, my_domain, config.URLS_FILE)
-        # ecdn是全球加速服务，与CDN不同，本账号没有开通该功能
-        # run_config_ecdn(SECRETID, SECRETKEY, my_domain, cert_id)
-
-        # 对腾讯云EO的支持
-        if config.ZONE_ID:
-            run_config_teo(SECRETID, SECRETKEY, config.ZONE_ID, my_domain, cert_id)
+        if my_domain.startswith('*'):
+            domain_list = get_cdn_domains(SECRETID, SECRETKEY, cert_id)
+            for domain in domain_list:
+                process_domain_config(SECRETID, SECRETKEY, domain, cert_id)
+        else:
+            process_domain_config(SECRETID, SECRETKEY, my_domain, cert_id)

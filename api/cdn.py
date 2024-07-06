@@ -211,3 +211,22 @@ def update_cdn_https_options(client, domain, http2, hsts, age, hsts_subdomain, o
     except TencentCloudSDKException as err:
         print(err)
         exit("为{}的CDN开启HTTPS选项功能出错".format(domain))
+
+def describe_cert_domains(client, cert_id):
+    '''获取指定证书ID的CDN域名列表
+    '''
+    try:
+        req = models.DescribeCertDomainsRequest()
+        params = {
+            "CertId": cert_id
+        }
+        req.from_json_string(json.dumps(params))
+    
+        resp = client.DescribeCertDomains(req)
+        # print(resp.to_json_string())
+        print("获取指定ssl证书id的CDN域名列表成功")
+        return resp.Domains
+
+    except TencentCloudSDKException as err:
+        print(err)
+        return []
