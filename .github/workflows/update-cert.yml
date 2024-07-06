@@ -22,11 +22,11 @@ jobs:
         env:
           DP_Id: ${{ secrets.DP_Id }}
           DP_Key: ${{ secrets.DP_Key }}
-          ACME_DNS_TYPE: ${{ secrets.ACME_DNS_TYPE }}
-          ACME_DOMAIN: ${{ secrets.ACME_DOMAIN }}
+          ACME_DNS_TYPE: ${{ vars.ACME_DNS_TYPE }}
+          ACME_DOMAIN: ${{ vars.ACME_DOMAIN }}
           SECRETID: ${{ secrets.SECRETID }}
           SECRETKEY: ${{ secrets.SECRETKEY }}
-          CDN_DOMAIN: ${{ secrets.CDN_DOMAIN }}
+          CDN_DOMAIN: ${{ vars.CDN_DOMAIN }}
           CERT_HOME: /home/runner/.acme.sh
           ACME_HOME: /home/runner/.acme.sh
           WORK_DIR: .
