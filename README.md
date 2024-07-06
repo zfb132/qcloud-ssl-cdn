@@ -50,13 +50,18 @@ docker run -d \
 
 Fork 此项目，配置以下 Github Action Secrets
 
-* `ACME_DNS_TYPE`: Acme 的 dns 类型，你可以选择你的 dns 类型并配置[环境变量密钥](https://github.com/acmesh-official/acme.sh/wiki/dnsapi)
-* `ACME_DOMAIN`: 你的顶级域名，例如：`whuzfb.cn`，自动申请证书 `whuzfb.cn/*.whuzfb.cn`
+* `DP_Id`: DNSPOD API ID
+* `DP_Key`: DNSPOD API KEY
 * `SECRETID`: 腾讯云 Secret Id
 * `SECRETKEY`: 腾讯云 Secret Key
-* `CDN_DOMAIN`: CDN 域名，多个域名用逗号分隔
 * `BARK_HOST`: [Bark](https://github.com/Finb/Bark) 消息通知 Host
 * `BARK_KEY`: [Bark](https://github.com/Finb/Bark) 消息通知 Key
+
+配置以下项目的 Github Action Variables
+
+* `ACME_DNS_TYPE`: Acme 的 dns 类型，你可以选择你的 dns 类型并配置[环境变量密钥](https://github.com/acmesh-official/acme.sh/wiki/dnsapi)
+* `ACME_DOMAIN`: 你的顶级域名，例如：`whuzfb.cn`，自动申请证书 `whuzfb.cn/*.whuzfb.cn`
+* `CDN_DOMAIN`: CDN 域名，多个域名用逗号分隔
 
 ### 手动部署
 
