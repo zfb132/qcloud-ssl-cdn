@@ -75,6 +75,9 @@ PURGE_URL = True
 # https://blog.whuzfb.cn/img/me2.jpg
 # https://blog.whuzfb.cn/img/home-bg.jpg
 URLS_FILE = "urls.txt"
+# 仅用于边缘安全加速平台EO更换SSL证书，不用于CDN
+# 区域ID：可以手动利用函数get_teo_zones_list获取所有的加速区域ID；格式为 zone-xxxxxx
+ZONE_ID = ""
 EOF
 # 更新CDN证书
 cd ${WORK_DIR} && python main.py
